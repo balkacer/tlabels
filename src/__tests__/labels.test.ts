@@ -1,4 +1,4 @@
-// import { tlbs } from '../index';
+import { tlbs } from '../index';
 // const lbs = tlbs('es', ['es', 'en']);
 
 test('sum 1 + 1 shuld equals to 2', () => {

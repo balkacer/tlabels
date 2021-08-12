@@ -7,7 +7,7 @@ const getLanguageJsonFiles = async (language: string): Promise<any> => {
   return fetch(language + '.json').then((response) => response.json());
 };
 const getTranslatios = async (languages: string[]): Promise<any> => {
-  new Promise<any>((resolve) => {
+  return new Promise<any>((resolve) => {
     const translations = Object.fromEntries(languages.map((language) => [language, '']));
     languages.forEach(async (language: string) => {
       await getLanguageJsonFiles(language).then((labels: any) => {
@@ -25,7 +25,7 @@ const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]
   });
 };
 const insertOrEditLabels = async (labels: Label[], languages: string[]): Promise<void> => {
-  new Promise<any>(async (resolve) => {
+  return new Promise<any>(async (resolve) => {
     const translations = await getTranslatios(languages);
     labels.forEach(({ name: label, values }) => {
       languages.forEach((lang) => {
