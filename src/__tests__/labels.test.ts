@@ -1,16 +1,23 @@
-import { tlbs } from '../index';
+// import { tlbs } from '../index';
+// const lbs = tlbs('es', ['es', 'en']);
 
-test('ceate a label', () => {
-    const lbs = tlbs('es', ['es', 'en']);
-    lbs.insertOrEdit([
-        { 
-            name: 'label_1', 
-            values: { 
-                es: 'verdadero', 
-                en: 'true' 
-            } 
-        }
-    ]);
-
-    expect(lbs.get('label_1')).toBe('verdadero');
+test('sum 1 + 1 shuld equals to 2', () => {
+    const sum = 1 + 1;
+    expect(sum).toBe(2);
 });
+
+// test('ceate a label', async () => {
+//     await lbs.insertOrEdit([
+//         { 
+//             name: 'label_1', 
+//             values: { 
+//                 es: 'verdadero', 
+//                 en: 'true' 
+//             } 
+//         }
+//     ]);
+
+//     return lbs.get('label_1').then((data) => {
+//         expect(data).toBe('verdadero');
+//     });
+// });

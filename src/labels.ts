@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-export interface Label<T> {
+interface Label {
   name: string;
-  values: T;
+  values: any;
 }
 const getLanguageJsonFiles = async (language: string): Promise<any> => {
   return fetch(language + '.json').then((response) => response.json());
@@ -24,12 +24,12 @@ const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]
     });
   });
 };
-const insertOrEditLabels = async <T>(labels: Label<T>[], languages: string[]): Promise<void> => {
+const insertOrEditLabels = async (labels: Label[], languages: string[]): Promise<void> => {
   new Promise<any>(async (resolve) => {
     const translations = await getTranslatios(languages);
     labels.forEach(({ name: label, values }) => {
       languages.forEach((lang) => {
-        translations[lang][label] = (values as any)[lang];
+        translations[lang][label] = values[lang];
       });
     });
     resolve(translations);
@@ -55,10 +55,8 @@ const deleteLabel = async (name: string, languages: string[]): Promise<void> => 
   });
 };
 const Labels = (useLanguage: string, languages: string[]) => {
-  const LabelsType = Object.fromEntries(languages.map((language) => [language, '']));
-
   return {
-    insertOrEdit: async (labels: Label<typeof LabelsType>[]): Promise<void> =>
+    insertOrEdit: async (labels: Label[]): Promise<void> =>
       await insertOrEditLabels(labels, languages),
     getAll: async (): Promise<any> => await getAllLabels(useLanguage, languages),
     get: async (name: string): Promise<string> => await getLabel(name, useLanguage, languages),
