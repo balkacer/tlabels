@@ -1,16 +1,25 @@
 import * as fs from 'fs';
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 interface Label {
   name: string;
   values: any;
 }
-const getLanguageJsonFiles = async (language: string): Promise<any> => {
-  return fetch(language + '.json').then((response) => response.json());
+const getLanguageJsonFiles = async (language: string, filesPath: string): Promise<any> => {
+  const request = new XMLHttpRequest();
+  let json = {};
+  request.open('GET', (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json');
+  request.responseType = 'json';
+  request.send();
+  request.onload = () => {
+    json = request.response;
+  }
+  return new Promise<any>(() => json as any);
 };
-const getTranslatios = async (languages: string[]): Promise<any> => {
+const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
   return new Promise<any>((resolve) => {
     const translations = Object.fromEntries(languages.map((language) => [language, '']));
     languages.forEach(async (language: string) => {
-      await getLanguageJsonFiles(language).then((labels: any) => {
+      await getLanguageJsonFiles(language, filesPath).then((labels: any) => {
         translations[language] = labels;
       });
     });
@@ -24,28 +33,28 @@ const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]
     });
   });
 };
-const insertOrEditLabels = async (labels: Label[], languages: string[]): Promise<void> => {
-  return new Promise<any>(async (resolve) => {
-    const translations = await getTranslatios(languages);
+const insertOrEditLabels = async (labels: Label[], languages: string[], filesPath: string): Promise<void> => {
+  return await getTranslatios(languages, filesPath).then((translations) => {
     labels.forEach(({ name: label, values }) => {
-      languages.forEach((lang) => {
-        translations[lang][label] = values[lang];
+      languages.forEach((language) => {
+        translations[language] = translations[language] || {};
+        translations[language][label] = values[language];
       });
     });
-    resolve(translations);
+    return translations;
   }).then((translations) => {
     generateOrEditLanguagesJsonFiles(translations, languages);
   });
 };
-const getAllLabels = async (language: string, languages: string[]): Promise<any> => {
-  return await getTranslatios(languages).then((translations) => translations[language]);
+const getAllLabels = async (language: string, languages: string[], filesPath: string): Promise<any> => {
+  return await getTranslatios(languages, filesPath).then((translations) => translations[language]);
 };
-const getLabel = async (name: string, language: string, languages: string[]): Promise<string> => {
-  return await getTranslatios(languages).then((translations) => translations[language][name] as string);
+const getLabel = async (name: string, language: string, languages: string[], filesPath: string): Promise<string> => {
+  return await getTranslatios(languages, filesPath).then((translations) => translations[language][name] as string);
 };
-const deleteLabel = async (name: string, languages: string[]): Promise<void> => {
+const deleteLabel = async (name: string, languages: string[], filesPath: string): Promise<void> => {
   new Promise<any>(async (resolve) => {
-    const translations = await getTranslatios(languages);
+    const translations = await getTranslatios(languages, filesPath);
     languages.forEach((language) => {
       delete translations[language][name];
     });
@@ -54,13 +63,27 @@ const deleteLabel = async (name: string, languages: string[]): Promise<void> => 
     generateOrEditLanguagesJsonFiles(translations, languages);
   });
 };
-const Labels = (useLanguage: string, languages: string[]) => {
-  return {
-    insertOrEdit: async (labels: Label[]): Promise<void> =>
-      await insertOrEditLabels(labels, languages),
-    getAll: async (): Promise<any> => await getAllLabels(useLanguage, languages),
-    get: async (name: string): Promise<string> => await getLabel(name, useLanguage, languages),
-    delete: async (name: string): Promise<void> => await deleteLabel(name, languages),
-  };
-};
-export default Labels;
+
+class Methods {
+  insertOrEdit: (labels: Label[]) => Promise<void>;
+  getAll: () => Promise<any>;
+  get: (name: string) => Promise<string>;
+  delete: (name: string) => Promise<void>;
+  private languages: string[];
+  private filesPath: string;
+  private useLanguage: string;
+
+  constructor(useLanguage: string, languages: string[], filesPath: string) {
+    this.languages = languages;
+    this.filesPath = filesPath;
+    this.useLanguage = useLanguage;
+
+    this.insertOrEdit = async (labels: Label[]): Promise<void> =>
+      await insertOrEditLabels(labels, this.languages, this.filesPath);
+    this.getAll = async (): Promise<any> => await getAllLabels(this.useLanguage, this.languages, this.filesPath);
+    this.get = async (name: string): Promise<string> => await getLabel(name, this.useLanguage, this.languages, this.filesPath);
+    this.delete = async (name: string): Promise<void> => await deleteLabel(name, this.languages, this.filesPath);
+  }
+}
+
+export default (useLanguage: string, languages: string[], filesPath: string) => new Methods(useLanguage, languages, filesPath);

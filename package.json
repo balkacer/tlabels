@@ -32,11 +32,20 @@
     "type": "git",
     "url": "git+https://github.com/makuttico/labels.git"
   },
-  "keywords": ["translation","translate","label","translation","translated"],
+  "keywords": [
+    "translation",
+    "translate",
+    "label",
+    "translation",
+    "translated"
+  ],
   "author": "makuttico",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/makuttico/labels/issues"
   },
-  "homepage": "https://github.com/makuttico/labels#readme"
+  "homepage": "https://github.com/makuttico/labels#readme",
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
 }
