@@ -4,26 +4,26 @@ interface Label {
   name: string;
   values: any;
 }
-const getLanguageJsonFiles = async (language: string, filesPath: string): Promise<any> => {
-  const request = new XMLHttpRequest();
+const getLanguageJsonFile = async (language: string, filePath: string): Promise<any> => {
   let json = {};
-  request.open('GET', (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json');
-  request.responseType = 'json';
-  request.send();
-  request.onload = () => {
-    json = request.response;
-  }
-  return new Promise<any>(() => json as any);
+  const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
+  console.log(fileFullPath);
+  
+  // const request = new XMLHttpRequest();
+  // request.open('GET', filePath);
+  // request.responseType = 'json';
+  // request.send();
+  return new Promise<any>((resolve) => resolve({label_1: 'verdadero'}));
 };
 const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
   return new Promise<any>((resolve) => {
     const translations = Object.fromEntries(languages.map((language) => [language, '']));
     languages.forEach(async (language: string) => {
-      await getLanguageJsonFiles(language, filesPath).then((labels: any) => {
+      await getLanguageJsonFile(language, filesPath).then((labels: any) => {
         translations[language] = labels;
       });
     });
-    resolve(translations);
+    return resolve(translations);
   });
 };
 const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]): void => {
@@ -50,7 +50,10 @@ const getAllLabels = async (language: string, languages: string[], filesPath: st
   return await getTranslatios(languages, filesPath).then((translations) => translations[language]);
 };
 const getLabel = async (name: string, language: string, languages: string[], filesPath: string): Promise<string> => {
-  return await getTranslatios(languages, filesPath).then((translations) => translations[language][name] as string);
+  return await getTranslatios(languages, filesPath).then((translations) => {
+    console.log(translations);    
+    return translations[language][name] as string
+  });
 };
 const deleteLabel = async (name: string, languages: string[], filesPath: string): Promise<void> => {
   new Promise<any>(async (resolve) => {
