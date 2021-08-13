@@ -4,9 +4,9 @@ interface Label {
   values: any;
 }
 const getLanguageJsonFile = async (language: string, filePath: string): Promise<any> => {
-  // let json = {};
-  // const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
-  return new Promise<any>((resolve) => resolve({ label_1: 'verdadero' }));
+  const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
+  let jsonData = require(fileFullPath);
+  return new Promise<any>((resolve) => resolve(jsonData));
 };
 const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
   return new Promise<any>((resolve) => {
