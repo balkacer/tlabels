@@ -1,18 +1,11 @@
 import * as fs from 'fs';
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 interface Label {
   name: string;
   values: any;
 }
 const getLanguageJsonFile = async (language: string, filePath: string): Promise<any> => {
-  let json = {};
-  const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
-  console.log(fileFullPath);
-  
-  // const request = new XMLHttpRequest();
-  // request.open('GET', filePath);
-  // request.responseType = 'json';
-  // request.send();
+  // let json = {};
+  // const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
   return new Promise<any>((resolve) => resolve({label_1: 'verdadero'}));
 };
 const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
@@ -51,7 +44,6 @@ const getAllLabels = async (language: string, languages: string[], filesPath: st
 };
 const getLabel = async (name: string, language: string, languages: string[], filesPath: string): Promise<string> => {
   return await getTranslatios(languages, filesPath).then((translations) => {
-    console.log(translations);    
     return translations[language][name] as string
   });
 };
