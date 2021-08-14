@@ -3,16 +3,40 @@ interface Label {
   name: string;
   values: any;
 }
+const readFile = (filePath: string): any => {
+  try { return JSON.parse(fs.readFileSync(filePath).toString()) }
+  catch { writeFile(filePath) }
+  finally {
+    return JSON.parse(fs.readFileSync(filePath).toString());
+  }
+}
+
+const writeFile = (filePath: string, data: any = {}) => {
+  console.log('This is Data: '+typeof data);
+  console.log(JSON.stringify(data));
+  try {
+    fs.writeFile(filePath, JSON.stringify({}), (err) => {
+      if (err) throw err;
+    });
+  }
+  catch (e) {
+    console.log(e);
+  }
+  finally {
+    console.log('can\'t create this file!');
+  }
+}
 const getLanguageJsonFile = async (language: string, filePath: string): Promise<any> => {
   const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
-  let jsonData = require(fileFullPath);
-  return new Promise<any>((resolve) => resolve(jsonData));
+  return new Promise<any>((resolve) => resolve(readFile(fileFullPath)));
 };
 const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
   return new Promise<any>((resolve) => {
     const translations = Object.fromEntries(languages.map((language) => [language, '']));
     languages.forEach(async (language: string) => {
       await getLanguageJsonFile(language, filesPath).then((labels: any) => {
+        console.log(labels);
+        
         translations[language] = labels;
       });
     });
@@ -22,9 +46,9 @@ const getTranslatios = async (languages: string[], filesPath: string): Promise<a
 const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[], filesPath: string): void => {
   languages.forEach((language: string) => {
     const fileFullPath = (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json';
-    fs.writeFile(fileFullPath, JSON.stringify(translations[language]), (err) => {
-      if (err) throw err;
-    });
+    console.log(translations[language]);
+    
+    writeFile(fileFullPath, translations[language]);
   });
 };
 const insertOrEditLabels = async (labels: Label[], languages: string[], filesPath: string): Promise<void> => {
