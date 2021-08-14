@@ -4,19 +4,26 @@ interface Label {
   values: any;
 }
 const readFile = (filePath: string): any => {
-  try { return JSON.parse(fs.readFileSync(filePath).toString()) }
-  catch { writeFile(filePath) }
+  try {
+    const data = fs.readFileSync(filePath);
+    return JSON.parse(data.toString());
+  }
+  catch {
+    console.log("queloque");
+    writeFile(filePath, {});
+  }
   finally {
-    return JSON.parse(fs.readFileSync(filePath).toString());
+    const data = fs.readFileSync(filePath);
+    return JSON.parse(data.toString());
   }
 }
-
 const writeFile = (filePath: string, data: any = {}) => {
-  console.log('This is Data: '+typeof data);
-  console.log(JSON.stringify(data));
+  console.log('This is Data: ' + typeof data);
   try {
     fs.writeFile(filePath, JSON.stringify({}), (err) => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
     });
   }
   catch (e) {
@@ -36,7 +43,6 @@ const getTranslatios = async (languages: string[], filesPath: string): Promise<a
     languages.forEach(async (language: string) => {
       await getLanguageJsonFile(language, filesPath).then((labels: any) => {
         console.log(labels);
-        
         translations[language] = labels;
       });
     });
@@ -47,7 +53,6 @@ const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]
   languages.forEach((language: string) => {
     const fileFullPath = (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json';
     console.log(translations[language]);
-    
     writeFile(fileFullPath, translations[language]);
   });
 };
@@ -85,7 +90,6 @@ const deleteLabel = async (name: string, languages: string[], filesPath: string)
     generateOrEditLanguagesJsonFiles(translations, languages, filesPath);
   });
 };
-
 class Methods {
   insertOrEdit: (labels: Label[]) => Promise<void>;
   getAll: () => Promise<any>;
@@ -94,12 +98,10 @@ class Methods {
   private languages: string[];
   private filesPath: string;
   private useLanguage: string;
-
   constructor(useLanguage: string, languages: string[], filesPath: string) {
     this.languages = languages;
     this.filesPath = filesPath;
     this.useLanguage = useLanguage;
-
     this.insertOrEdit = async (labels: Label[]): Promise<void> =>
       await insertOrEditLabels(labels, this.languages, this.filesPath);
     this.getAll = async (): Promise<any> => await getAllLabels(this.useLanguage, this.languages, this.filesPath);
@@ -108,6 +110,5 @@ class Methods {
     this.delete = async (name: string): Promise<void> => await deleteLabel(name, this.languages, this.filesPath);
   }
 }
-
 export default (useLanguage: string, languages: string[], filesPath: string) =>
   new Methods(useLanguage, languages, filesPath);
