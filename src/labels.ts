@@ -19,9 +19,10 @@ const getTranslatios = async (languages: string[], filesPath: string): Promise<a
     return resolve(translations);
   });
 };
-const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[]): void => {
+const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[], filesPath: string): void => {
   languages.forEach((language: string) => {
-    fs.writeFile(language + '.json', JSON.stringify(translations[language]), (err) => {
+    const fileFullPath = (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json';
+    fs.writeFile(fileFullPath, JSON.stringify(translations[language]), (err) => {
       if (err) throw err;
     });
   });
@@ -38,7 +39,7 @@ const insertOrEditLabels = async (labels: Label[], languages: string[], filesPat
       return translations;
     })
     .then((translations) => {
-      generateOrEditLanguagesJsonFiles(translations, languages);
+      generateOrEditLanguagesJsonFiles(translations, languages, filesPath);
     });
 };
 const getAllLabels = async (language: string, languages: string[], filesPath: string): Promise<any> => {
@@ -57,7 +58,7 @@ const deleteLabel = async (name: string, languages: string[], filesPath: string)
     });
     resolve(translations);
   }).then((translations) => {
-    generateOrEditLanguagesJsonFiles(translations, languages);
+    generateOrEditLanguagesJsonFiles(translations, languages, filesPath);
   });
 };
 

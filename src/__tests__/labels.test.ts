@@ -1,5 +1,5 @@
 import { tlbs } from '../index';
-const lbs = tlbs('es', ['es', 'en'], '/Users/developer/Downloads/py/labels/json');
+const lbs = tlbs('es', ['es', 'en'], 'C:/Users/enmah/Documents/Pojects/makuttico/labels/json');
 
 test('ceate and get a label', async () => {
     await lbs.insertOrEdit([
@@ -29,7 +29,7 @@ test('ceate and edit a label', async () => {
                 en: 'all right!',
             },
         },
-    ]);    
+    ]);
     await lbs.get('label_2').then((data) => {
         first = data;
     });
