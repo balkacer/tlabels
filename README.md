@@ -40,6 +40,7 @@ await lbs.insertOrEdit([
     name: 'hello_world_2',
     values: {
       en: 'Hello World 2',
+      fr: 'Salut Monde 2'
     },
   },
 ]);
