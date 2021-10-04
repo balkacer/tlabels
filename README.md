@@ -9,7 +9,7 @@ import { tlbs } from 'tlbs';
 ```
 - Then initialize passing the language to use, an array with all languages to work and the path to save the json files.
 ``` javascript
-const lbs = tlbs('en', ['en', 'es'], 'path/to/save/files/json');
+const lbs = tlbs('en', ['en', 'es', 'fr'], 'path/to/save/files/json');
 ```
 ## Usage guide
 - To **CREATE** or **EDIT** a label...
