@@ -26,7 +26,7 @@ await lbs.insertOrEdit([
 ]);
 ```
 ## Usage guide
-- To **CREATE** or **EDIT** various labels...
+- To **CREATE** or **EDIT** multiple labels...
 ```javascript
 await lbs.insertOrEdit([
   {
