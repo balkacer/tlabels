@@ -4,45 +4,22 @@ interface Label {
   values: any;
 }
 const readFile = (filePath: string): any => {
-  try {
-    const data = fs.readFileSync(filePath);
-    return JSON.parse(data.toString());
-  }
-  catch {
-    console.log("queloque");
-    writeFile(filePath, {});
-  }
-  finally {
-    const data = fs.readFileSync(filePath);
-    return JSON.parse(data.toString());
-  }
-}
-const writeFile = (filePath: string, data: any = {}) => {
-  console.log('This is Data: ' + typeof data);
-  try {
-    fs.writeFile(filePath, JSON.stringify({}), (err) => {
-      if (err) {
-        throw err;
-      }
-    });
-  }
-  catch (e) {
-    console.log(e);
-  }
-  finally {
-    console.log('can\'t create this file!');
-  }
-}
+  const rawdata = fs.readFileSync(filePath);
+  return JSON.parse(rawdata.toString());
+};
+const writeFile = (filePath: string, data: any = {}): void => {
+  const _dt = JSON.stringify(data, null, 2);
+  fs.writeFileSync(filePath, _dt);
+};
 const getLanguageJsonFile = async (language: string, filePath: string): Promise<any> => {
-  const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + "/") + language + '.json';
+  const fileFullPath = (filePath[filePath.length - 1] === '/' ? filePath : filePath + '/') + language + '.json';
   return new Promise<any>((resolve) => resolve(readFile(fileFullPath)));
 };
-const getTranslatios = async (languages: string[], filesPath: string): Promise<any> => {
+const getTranslations = async (languages: string[], filesPath: string): Promise<any> => {
   return new Promise<any>((resolve) => {
     const translations = Object.fromEntries(languages.map((language) => [language, '']));
     languages.forEach(async (language: string) => {
       await getLanguageJsonFile(language, filesPath).then((labels: any) => {
-        console.log(labels);
         translations[language] = labels;
       });
     });
@@ -51,18 +28,17 @@ const getTranslatios = async (languages: string[], filesPath: string): Promise<a
 };
 const generateOrEditLanguagesJsonFiles = (translations: any, languages: string[], filesPath: string): void => {
   languages.forEach((language: string) => {
-    const fileFullPath = (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + "/") + language + '.json';
-    console.log(translations[language]);
+    const fileFullPath = (filesPath[filesPath.length - 1] === '/' ? filesPath : filesPath + '/') + language + '.json';
     writeFile(fileFullPath, translations[language]);
   });
 };
 const insertOrEditLabels = async (labels: Label[], languages: string[], filesPath: string): Promise<void> => {
-  return await getTranslatios(languages, filesPath)
+  return await getTranslations(languages, filesPath)
     .then((translations) => {
       labels.forEach(({ name: label, values }) => {
         languages.forEach((language) => {
           translations[language] = translations[language] || {};
-          translations[language][label] = values[language];
+          if (values[language]) translations[language][label] = values[language];
         });
       });
       return translations;
@@ -72,16 +48,16 @@ const insertOrEditLabels = async (labels: Label[], languages: string[], filesPat
     });
 };
 const getAllLabels = async (language: string, languages: string[], filesPath: string): Promise<any> => {
-  return await getTranslatios(languages, filesPath).then((translations) => translations[language]);
+  return await getTranslations(languages, filesPath).then((translations) => translations[language]);
 };
 const getLabel = async (name: string, language: string, languages: string[], filesPath: string): Promise<string> => {
-  return await getTranslatios(languages, filesPath).then((translations) => {
+  return await getTranslations(languages, filesPath).then((translations) => {
     return translations[language][name] as string;
   });
 };
 const deleteLabel = async (name: string, languages: string[], filesPath: string): Promise<void> => {
   new Promise<any>(async (resolve) => {
-    const translations = await getTranslatios(languages, filesPath);
+    const translations = await getTranslations(languages, filesPath);
     languages.forEach((language) => {
       delete translations[language][name];
     });

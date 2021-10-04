@@ -1,51 +1,33 @@
 import { tlbs } from '../index';
-const lbs = tlbs('es', ['es', 'en'], 'C:/Users/enmah/Documents/Pojects/makuttico/labels/json');
+const lbs = tlbs('fr', ['es', 'en', 'fr'], 'C:/Users/enmah/Documents/Projects/makuttico/labels/json');
 
 test('ceate and get a label', async () => {
-    await lbs.insertOrEdit([
-        {
-            name: 'label_3',
-            values: {
-                es: 'verdadero',
-                en: 'true',
-            },
-        },
-    ]);
+  await lbs.insertOrEdit([
+    {
+      name: 'hello_world',
+      values: {
+        es: 'Hola Mundo',
+        en: 'Hello World',
+        fr: 'Salut Monde',
+      },
+    },
+  ]);
 
-    return lbs.get('label_3').then((data) => {
-        expect(data).toBe('verdadero');
-    });
+  return lbs.get('hello_world').then((data) => {
+    expect(data).toBe('Salut Monde');
+  });
 });
 
-test('ceate and edit a label', async () => {
-    let first = null;
-    let second = null;
-
-    await lbs.insertOrEdit([
-        {
-            name: 'label_1',
-            values: {
-                es: '¡todo estu bien!',
-                en: 'all right!',
-            },
-        },
-    ]);
-    await lbs.get('label_4').then((data) => {
-        first = data;
-    });
-    await lbs.insertOrEdit([
-        {
-            name: 'label_5',
-            values: {
-                es: '¡nada estu bien!',
-                en: 'nothing be right!',
-            },
-        },
-    ]);
-    await lbs.get('label_5').then((data) => {
-        second = data
-    });
-
-    expect(first).toBe('¡todo estu bien!');
-    expect(second).toBe('¡nada estu bien!');
+test('edit a label', async () => {
+  await lbs.insertOrEdit([
+    {
+      name: 'hello_world',
+      values: {
+        fr: 'Salut Monde 2',
+      },
+    },
+  ]);
+  await lbs.get('hello_world').then((data) => {
+    expect(data).toBe('Salut Monde 2');
+  });
 });
