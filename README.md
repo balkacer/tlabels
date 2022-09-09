@@ -47,21 +47,24 @@ await lbs.insertOrEdit([
 ```
 - To **GET** a specific label use...
  ```javascript
-await lbs.get('hello_world').then((label) => {
+let label = await lbs.get('hello_world');
   // do all you want with label here
   // label is a string
-});
 ```
 - To **GET ALL** use:
 ```javascript
-await lbs.getAll().then((labels) => {
+let labels = await lbs.getAll();
   // do all you want with labels
   // labels is an object
-});
 ```
 - To **DELETE** one...
 ```javascript
 await lbs.delete('hello_world');
+```
+- To know **IF EXIST** one...
+```javascript
+let labelExist = await lbs.itExist('hello_world');
+  // result: boolean
 ```
 
 _**Note:**_ The name of the labels must be as ```another_name``` and not as ```another name``` or ```another-name```. This will turn into a javascript object and json as well, those rules prevent the library from breaking.
