@@ -2,69 +2,39 @@
 Get custom translations to your app easily!
 
 ## Installation and Initialization
-- Use ```npm i tlbs``` to install
+- Use ``` npm i tlabels ``` to install
 - First, import the libary...
 ```javascript
-import { tlbs } from 'tlbs';
+import tLabels from 'tlabels';
 ```
-- Then initialize passing the language to use, an array with all languages to work and the path to save the json files.
+- Then initialize passing the language to use by default and the path to save the json files.
 ``` javascript
-const lbs = tlbs('en', ['en', 'es', 'fr'], 'path/to/save/files/json');
+const labels = tLabels('en', 'path/to/save/files/json');
 ```
 ## Usage guide
-- To **CREATE** or **EDIT** a label...
-```javascript
-await lbs.insertOrEdit([
-  {
-    name: 'hello_world',
-    values: {
-      es: 'Hola Mundo',
-      en: 'Hello World',
-      fr: 'Salut Monde',
-    },
-  },
-]);
+- To **CREATE** or **EDIT** a label, use the method ``` setLabel ``` passing the label name, the label value and the language to use.
+``` javascript
+await labels.insertOrEdit('hello_world', 'hello world', 'en');
 ```
-## Usage guide
-- To **CREATE** or **EDIT** multiple labels...
-```javascript
-await lbs.insertOrEdit([
-  {
-    name: 'hello_world',
-    values: {
-      en: 'Hello World',
-      es: 'Hola Mundo',
-    },
-  },
-  {
-    name: 'hello_world_2',
-    values: {
-      en: 'Hello World 2',
-      fr: 'Salut Monde 2'
-    },
-  },
-]);
-```
-- To **GET** a specific label use...
+- To **GET** a specific label value, use the method ``` getLabel ``` passing the label name and the language to use (optional).
  ```javascript
 let label = await lbs.get('hello_world');
-  // do all you want with label here
-  // label is a string
 ```
-- To **GET ALL** use:
-```javascript
-let labels = await lbs.getAll();
-  // do all you want with labels
-  // labels is an object
-```
-- To **DELETE** one...
+- To **DELETE** one label use the method ``` deleteLabel ``` passing just the label name.
 ```javascript
 await lbs.delete('hello_world');
 ```
-- To know **IF EXIST** one...
+- To check **IF EXIST** if exist a label, use the method ``` exist ``` passing the label name.
 ```javascript
 let labelExist = await lbs.itExist('hello_world');
-  // result: boolean
+```
+- To get **CURRENT LANGUAGE** use the method ``` getLanguage ``` without parameters (is not async).
+```javascript
+let language = lbs.getLanguage();
+```
+- To **CHANGE LANGUAGE** use the method ``` setLanguage ``` passing the language to use (is not async).
+```javascript
+lbs.setLanguage('pt');
 ```
 
 _**Note:**_ The name of the labels must be as ```another_name``` and not as ```another name``` or ```another-name```. This will turn into a javascript object and json as well, those rules prevent the library from breaking.
