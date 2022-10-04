@@ -1,4 +1,5 @@
 import { readFile, writeFile } from './files';
+import { toSnakeCase } from './utils';
 
 export async function getLabel(name: string, language: string, filePath: string): Promise<string> {
   const labels = await readFile(filePath);
@@ -20,7 +21,9 @@ export async function setLabel(value: string, name: string, language: string, fi
       labels[language] = {};
     }
 
-    labels[language][name] = value;
+    let labelName = toSnakeCase(name);
+
+    labels[language][labelName] = value;
     await writeFile(filePath, labels);
   }
 }

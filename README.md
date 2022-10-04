@@ -2,39 +2,53 @@
 Get custom translations to your app easily!
 
 ## Installation and Initialization
-- Use ``` npm i tlabels ``` to install
-- First, import the libary...
+Use ``` npm i tlabels ``` to install.
+
+Then, in your code, import the module.
 ```javascript
 import tLabels from 'tlabels';
 ```
-- Then initialize passing the language to use by default and the path to save the json files.
+Next, initialize the instance with the default language and the path to the labels file (If not exist, it will be created).
 ``` javascript
 const labels = tLabels('en', 'path/to/save/files/json');
 ```
+Now you can use the instance to get the labels.
 ## Usage guide
 - To **CREATE** or **EDIT** a label, use the method ``` setLabel ``` passing the label name, the label value and the language to use.
 ``` javascript
-await labels.insertOrEdit('hello_world', 'hello world', 'en');
+// Create a label in the default language
+await labels.setLabel('hello_world', 'hello world');
+
+// Create a label in a specific language
+await labels.setLabel('hello_world', 'hello world', 'en');
 ```
 - To **GET** a specific label value, use the method ``` getLabel ``` passing the label name and the language to use (optional).
  ```javascript
-let label = await lbs.get('hello_world');
+// Get the label value in the default language
+let label = await lbs.getLabel('hello_world');
+
+// Get the label value in a specific language
+let label = await lbs.getLabel('hello_world', 'pt');
 ```
 - To **DELETE** one label use the method ``` deleteLabel ``` passing just the label name.
 ```javascript
-await lbs.delete('hello_world');
+await lbs.deleteLabel('hello_world');
 ```
 - To check **IF EXIST** if exist a label, use the method ``` exist ``` passing the label name.
 ```javascript
-let labelExist = await lbs.itExist('hello_world');
+let labelExist = await lbs.exist('hello_world');
 ```
-- To get **CURRENT LANGUAGE** use the method ``` getLanguage ``` without parameters (is not async).
+- To get **CURRENT LANGUAGE** use the method ``` getCurrentLanguage ``` without parameters (is not async).
 ```javascript
-let language = lbs.getLanguage();
+let language = lbs.getCurrentLanguage();
 ```
-- To **CHANGE LANGUAGE** use the method ``` setLanguage ``` passing the language to use (is not async).
+- To **CHANGE LANGUAGE** use the method ``` setCurrentLanguage ``` passing the language to use (is not async).
 ```javascript
-lbs.setLanguage('pt');
+lbs.getCurrentLanguage('es');
 ```
+## Notes
+- The name of the labels must be unique, if you try to create a label with the same name in the same language, the value will be updated.
 
-_**Note:**_ The name of the labels must be as ```another_name``` and not as ```another name``` or ```another-name```. This will turn into a javascript object and json as well, those rules prevent the library from breaking.
+- The labels key must be in the format **snake case**. Ex: ``` label_name ```. If you try to create a label with a key in another format, the key will be converted to snake case.
+- If you try to get a label that does not exist, the method ``` getLabel ``` will return the label name.
+- If you remoove a label, the label will be removed from all languages.

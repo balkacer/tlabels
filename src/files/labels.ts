@@ -1,26 +1,25 @@
 import { readFile, writeFile } from './files';
-
 import { getLabel, setLabel } from './methods';
 
 class Labels {
   private filePath: string;
   private currentLanguage: string;
 
-  async insertOrEdit(value: string, label: string, language: string): Promise<any> {
+  async setLabel(value: string, label: string, language: string = this.currentLanguage): Promise<any> {
     await setLabel(value, label, language, this.filePath);
     return await getLabel(label, language, this.filePath);
   }
 
-  async itExists(name: string): Promise<boolean> {
+  async exist(name: string): Promise<boolean> {
     const label = await getLabel(name, this.currentLanguage, this.filePath);
     return label !== `[${name}]`;
   }
 
-  async get(name: string, language: string = this.currentLanguage): Promise<string> {
+  async getLabel(name: string, language: string = this.currentLanguage): Promise<string> {
     return await getLabel(name, language, this.filePath);
   }
 
-  async delete(name: string): Promise<void> {
+  async deleteLabel(name: string): Promise<void> {
     const labels = await readFile(this.filePath);
 
     if (!!labels) {
@@ -29,7 +28,7 @@ class Labels {
     }
   }
 
-  setLanguage(language: string): void {
+  setCurrentLanguage(language: string): void {
     this.currentLanguage = language;
   }
 
