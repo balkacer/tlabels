@@ -1,2 +1,2 @@
-import { default as tLabel } from './labels';
+import { default as tLabel } from './files/labels';
 export default tLabel;
