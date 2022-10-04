@@ -21,7 +21,7 @@ export async function setLabel(value: string, name: string, language: string, fi
       labels[language] = {};
     }
 
-    let labelName = toSnakeCase(name);
+    const labelName = toSnakeCase(name);
 
     labels[language][labelName] = value;
     await writeFile(filePath, labels);
