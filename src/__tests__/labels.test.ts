@@ -81,7 +81,7 @@ test('should get and change current language', () => {
   expect(priorLanguage).toBe('es');
 
   lbs.setCurrentLanguage('en');
-  
+
   let currentLanguage = lbs.getCurrentLanguage();
   expect(currentLanguage).not.toBe(priorLanguage);
 });
