@@ -14,7 +14,7 @@ const labels = tLabels('en', 'path/to/save/files/json');
 ```
 Now you can use the instance to get the labels.
 ## Usage guide
-- To **CREATE** or **EDIT** a label, use the method ``` setLabel ``` passing the label name, the label value and the language to use.
+- To **CREATE** or **EDIT** a label, use the method ``` setLabel ``` passing the label name, the label value and the language to use (optional, default is the default language that you set in the initialization).
 ``` javascript
 // Create a label in the default language
 await labels.setLabel('hello_world', 'hello world');
@@ -25,26 +25,26 @@ await labels.setLabel('hello_world', 'hello world', 'en');
 - To **GET** a specific label value, use the method ``` getLabel ``` passing the label name and the language to use (optional).
  ```javascript
 // Get the label value in the default language
-let label = await lbs.getLabel('hello_world');
+let label = await labels.getLabel('hello_world');
 
 // Get the label value in a specific language
-let label = await lbs.getLabel('hello_world', 'pt');
+let label = await labels.getLabel('hello_world', 'pt');
 ```
 - To **DELETE** one label use the method ``` deleteLabel ``` passing just the label name.
 ```javascript
-await lbs.deleteLabel('hello_world');
+await labels.deleteLabel('hello_world');
 ```
-- To check **IF EXIST** if exist a label, use the method ``` exist ``` passing the label name.
+- To check if a label **EXIST**, use the method ``` exist ``` passing the label name.
 ```javascript
-let labelExist = await lbs.exist('hello_world');
+let labelExist = await labels.exist('hello_world');
 ```
 - To get **CURRENT LANGUAGE** use the method ``` getCurrentLanguage ``` without parameters (is not async).
 ```javascript
-let language = lbs.getCurrentLanguage();
+let language = labels.getCurrentLanguage();
 ```
 - To **CHANGE LANGUAGE** use the method ``` setCurrentLanguage ``` passing the language to use (is not async).
 ```javascript
-lbs.getCurrentLanguage('es');
+labels.getCurrentLanguage('es');
 ```
 ## Notes
 - The name of the labels must be unique, if you try to create a label with the same name in the same language, the value will be updated.
