@@ -44,7 +44,7 @@ let language = labels.getCurrentLanguage();
 ```
 - To **CHANGE LANGUAGE** use the method ``` setCurrentLanguage ``` passing the language to use (is not async).
 ```javascript
-labels.getCurrentLanguage('es');
+labels.setCurrentLanguage('es');
 ```
 ## Notes
 - The name of the labels must be unique, if you try to create a label with the same name in the same language, the value will be updated.
